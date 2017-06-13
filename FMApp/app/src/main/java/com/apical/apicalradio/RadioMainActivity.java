@@ -38,7 +38,7 @@ import com.example.fmutil.FMUtil;
 
 
 public class RadioMainActivity extends BaseActivity {
-	private static final String TAG = "tt";
+	private static final String TAG = "radio";
 	private static final int REFLASH_TIME = 0x01; // ʱ�����ID
 	private static final int SEND_RADIO_CTRL = 0x02; // ��������������ID
 	private ApicalHardwareCtrl mApicalHawreCtrl; // apicalӲ�����ƽӿ�
@@ -465,6 +465,8 @@ public class RadioMainActivity extends BaseActivity {
 				if ((mRadioBandType <= FM3) && (mRadioBandType >= FM1)) {
 					SetFMFreq(showFreq);
 				} else {
+					Log.v("tt","onStopTrackingTouch showNum: "+showNum);
+					FMUtil.tune(showNum*100);
 					SetAMFreq(showNum);
 				}
 			}

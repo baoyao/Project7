@@ -2,6 +2,10 @@ package com.example.fmutil;
 
 
 public class FMUtil {
+
+    static{
+        System.loadLibrary("fmutil");
+    }
     /**
      * path ="/dev/fm"
      * @param path
