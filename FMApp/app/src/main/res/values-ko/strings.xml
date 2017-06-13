@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">라디오</string>
+    <string name="hello_world">안녕하세요!</string>
+    <string name="menu_settings">설정</string>
+    
+        <!-- 退出对话框 -->
+    <string name="quit_dlg_title">소프트웨어를 종료</string>
+    <string name="quit_dlg_msg">출구 라디오 소프트웨어 여부</string>
+    <string name="quit_dlg_ok">종료</string>
+    <string name="quit_dlg_cancel">종료되지 않습니다</string>
+
+</resources>

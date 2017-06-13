@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">rádio</string>
+    <string name="hello_world">Ahoj všichni!</string>
+    <string name="menu_settings">založit</string>
+    
+        <!-- 退出对话框 -->
+    <string name="quit_dlg_title">Ukončete software</string>
+    <string name="quit_dlg_msg">Ať už chcete rádio vypnout software</string>
+    <string name="quit_dlg_ok">přestat</string>
+    <string name="quit_dlg_cancel">nevyjede</string>
+
+</resources>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">radio</string>
+    <string name="hello_world">Bună ziua lume!</string>
+    <string name="menu_settings">Configurarea</string>
+    
+        <!-- 退出对话框 -->
+    <string name="quit_dlg_title">Ieșiți Software</string>
+    <string name="quit_dlg_msg">Dacă software-ul de radio ieșire</string>
+    <string name="quit_dlg_ok">părăsi</string>
+    <string name="quit_dlg_cancel">nu iese</string>
+
+</resources>

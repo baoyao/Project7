@@ -1,0 +1,396 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/RelativeLayoutRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/radio_bg"
+    tools:context=".RadioMainActivity" >
+
+    <RelativeLayout
+        android:id="@+id/RelativeLayoutPanelInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/top_info_bg"
+        android:gravity="top"
+        android:orientation="horizontal" >
+
+        <ImageButton
+            android:id="@+id/buttonLOC"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="25dip"
+            android:layout_marginTop="25dip"
+            android:background="@drawable/loc_btn_config" />
+
+        <ImageButton
+            android:id="@+id/buttonEqual"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/buttonLOC"
+            android:layout_marginLeft="25dip"
+            android:layout_marginTop="30dip"
+            android:background="@drawable/equal_btn_config" />
+
+        <ImageButton
+            android:id="@+id/buttonFrequency"
+            android:layout_width="0dip"
+            android:layout_height="0dip"
+            android:layout_marginLeft="750dip"
+            android:layout_marginTop="40dip"
+            android:background="@drawable/frequence_btn_config" />
+
+        <TextView
+            android:id="@+id/FmType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="200dip"
+            android:layout_marginTop="60dip"
+            android:text="FM-1"
+            android:textSize="36sp" />
+
+        <TextView
+            android:id="@+id/FmState"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="200dip"
+            android:layout_marginTop="120dip"
+            android:text="LOC"
+            android:textColor="#FFFF00"
+            android:textSize="30sp" />
+
+        <TextView
+            android:id="@+id/FmFlag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="280dip"
+            android:layout_marginTop="120dip"
+            android:textColor="#FFFF00"
+            android:textSize="30sp" />
+
+        <TextView
+            android:id="@+id/FmNum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="350dip"
+            android:layout_marginTop="60dip"
+            android:text="00.00"
+            android:textSize="80sp" />
+
+        <TextView
+            android:id="@+id/FmHz"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dip"
+            android:layout_marginTop="80dip"
+            android:layout_toRightOf="@id/FmNum"
+            android:text="FM \nMHz"
+            android:textSize="30sp" />
+
+        <TextView
+            android:id="@+id/FmTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="400dip"
+            android:layout_marginTop="25dip"
+            android:text="00:00"
+            android:textSize="36sp" />
+
+        <ImageView
+            android:id="@+id/imageSignal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="780dip"
+            android:layout_marginTop="35dip"
+            android:background="@drawable/signal_0"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/Signal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="810dip"
+            android:layout_marginTop="35dip"
+            android:text="00"
+            android:textSize="26sp"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayoutChannelProgress"
+        android:layout_width="800dip"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/RelativeLayoutPanelInfo"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="0dp"
+        android:layout_marginTop="0dp"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/textViewMinChannel"
+            android:layout_width="130dip"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="0dip"
+            android:layout_marginTop="30dp"
+            android:layout_weight="0.5"
+            android:gravity="center"
+            android:text="87.50"
+            android:textSize="36sp" />
+
+        <SeekBar
+            android:id="@+id/seekBarProgress"
+            android:layout_width="520dip"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="18dip"
+            android:layout_marginRight="18dip"
+            android:layout_weight="1"
+            android:background="@drawable/channel_bg"
+            android:maxHeight="18dip"
+            android:minHeight="18dip"
+            android:paddingLeft="18dip"
+            android:paddingRight="18dip"
+            android:progressDrawable="@drawable/seek_img"
+            android:thumb="@drawable/seek_thumb"
+            android:thumbOffset="18dip" />
+
+        <TextView
+            android:id="@+id/textViewMaxChannel"
+            android:layout_width="160dip"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="0dip"
+            android:layout_marginTop="30dp"
+            android:layout_weight="0.5"
+            android:gravity="center"
+            android:text="108.00"
+            android:textSize="36sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayoutRdsButton"
+        android:layout_width="800dip"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/RelativeLayoutPanelInfo"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="0dp"
+        android:layout_marginTop="0dp"
+        android:orientation="horizontal"
+        android:visibility="gone" >
+
+        <TextView
+            android:id="@+id/textViewTA"
+            android:layout_width="160dip"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dip"
+            android:layout_marginTop="30dp"
+            android:layout_weight="0.5"
+            android:gravity="center"
+            android:text="TA"
+            android:textSize="36sp" />
+
+        <TextView
+            android:id="@+id/textViewTP"
+            android:layout_width="160dip"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dip"
+            android:layout_marginTop="30dp"
+            android:layout_weight="0.5"
+            android:gravity="center"
+            android:text="TP"
+            android:textSize="36sp" />
+
+        <TextView
+            android:id="@+id/textViewAF"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="740dip"
+            android:layout_marginTop="130dip"
+            android:layout_weight="0.5"
+            android:gravity="center"
+            android:text=""
+            android:textColor="#FFFF00"
+            android:textSize="26sp" />
+
+        <TextView
+            android:id="@+id/buttonAF"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="860dip"
+            android:layout_marginTop="130dip"
+            android:layout_weight="0.5"
+            android:gravity="center"
+            android:text=""
+            android:textColor="#FFFF00"
+            android:textSize="26sp" />
+
+        <TextView
+            android:id="@+id/buttonTA"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:text="TA"
+            android:textSize="30sp" />
+
+        <TextView
+            android:id="@+id/buttonPTY"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:text="PTY"
+            android:textSize="30sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayoutChannelSave"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/linearLayoutChannelProgress"
+        android:background="@drawable/channel_save_bg"
+        android:orientation="horizontal" >
+
+        <ImageButton
+            android:id="@+id/buttonLeft"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dip"
+            android:layout_marginTop="10dip"
+            android:background="@drawable/left_btn" />
+
+        <TextView
+            android:id="@+id/FmChannel1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dip"
+            android:layout_marginTop="5dip"
+            android:background="@drawable/channel1"
+            android:gravity="center"
+            android:text="P1 \n88.50"
+            android:textSize="30sp" />
+
+        <TextView
+            android:id="@+id/FmChannel2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dip"
+            android:layout_marginTop="10dip"
+            android:background="@drawable/channel2"
+            android:gravity="center"
+            android:text="P2 \n88.50"
+            android:textSize="30sp" />
+
+        <TextView
+            android:id="@+id/FmChannel3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dip"
+            android:layout_marginTop="15dip"
+            android:background="@drawable/channel3"
+            android:gravity="center"
+            android:text="P3 \n88.50"
+            android:textSize="30sp" />
+
+        <TextView
+            android:id="@+id/FmChannel4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dip"
+            android:layout_marginTop="15dip"
+            android:background="@drawable/channel4"
+            android:gravity="center"
+            android:text="P4 \n88.50"
+            android:textSize="30sp" />
+
+        <TextView
+            android:id="@+id/FmChannel5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dip"
+            android:layout_marginTop="10dip"
+            android:background="@drawable/channel5"
+            android:gravity="center"
+            android:text="P5 \n88.50"
+            android:textSize="30sp" />
+
+        <TextView
+            android:id="@+id/FmChannel6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dip"
+            android:layout_marginTop="5dip"
+            android:background="@drawable/channel6"
+            android:gravity="center"
+            android:text="P6 \n88.50"
+            android:textSize="30sp" />
+
+        <ImageButton
+            android:id="@+id/buttonRight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dip"
+            android:layout_marginTop="10dip"
+            android:background="@drawable/right_btn" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayoutPanel"
+        android:layout_width="800dip"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/ctrl_bg_bottom"
+        android:orientation="horizontal" >
+
+        <ImageButton
+            android:id="@+id/buttonPreChannel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="40dip"
+            android:background="@drawable/pre_channel_btn" />
+
+        <ImageButton
+            android:id="@+id/buttonPreSearch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="40dip"
+            android:background="@drawable/pre_search_btn" />
+
+        <ImageButton
+            android:id="@+id/buttonAutoSearch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="40dip"
+            android:background="@drawable/auto_search_btn" />
+
+        <ImageButton
+            android:id="@+id/buttonFmAm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="40dip"
+            android:background="@drawable/fm_am_btn" />
+
+        <ImageButton
+            android:id="@+id/buttonBrower"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="40dip"
+            android:background="@drawable/brower_btn" />
+
+        <ImageButton
+            android:id="@+id/buttonNextSearch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="40dip"
+            android:background="@drawable/next_search_btn" />
+
+        <ImageButton
+            android:id="@+id/buttonNextChannel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="40dip"
+            android:background="@drawable/next_channel_btn" />
+    </LinearLayout>
+
+</RelativeLayout>

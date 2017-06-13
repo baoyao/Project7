@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">radio</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="menu_settings">Sediakan</string>
+    
+        <!-- 退出对话框 -->
+    <string name="quit_dlg_title">keluar Software</string>
+    <string name="quit_dlg_msg">Sama ada keluar perisian radio</string>
+    <string name="quit_dlg_ok">berhenti</string>
+    <string name="quit_dlg_cancel">tidak keluar</string>
+
+</resources>

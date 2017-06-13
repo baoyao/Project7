@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">收音機</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="menu_settings">Settings</string>
+    
+        <!-- 退出對話框 -->
+    <string name="quit_dlg_title">退出軟件</string>
+    <string name="quit_dlg_msg">是否退出收音機軟件</string>
+    <string name="quit_dlg_ok">退出</string>
+    <string name="quit_dlg_cancel">不退出</string>
+
+</resources>

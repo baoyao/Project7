@@ -1,0 +1,418 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/RelativeLayoutRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/radio_bg"
+    tools:context=".MainActivity" >
+
+    <SeekBar
+        android:id="@+id/seekBarProgress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/am_channel_bg"
+        android:maxHeight="18dip"
+        android:minHeight="18dip"
+        android:paddingLeft="154dip"
+        android:paddingRight="154dip"
+        android:progressDrawable="@drawable/seek_img"
+        android:thumb="@drawable/thumb_selector"
+        android:thumbOffset="18dip" />
+
+    <RelativeLayout
+        android:id="@+id/RelativeLayoutPanelInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/seekBarProgress"
+        android:layout_centerHorizontal="true" >
+
+        <ImageButton
+            android:id="@+id/buttonAF"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="35dp"
+            android:layout_marginTop="35dp"
+            android:background="@drawable/af_btn_config"
+            android:contentDescription="@string/content_description" />
+
+        <ImageButton
+            android:id="@+id/buttonTA"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/buttonAF"
+            android:layout_marginLeft="35dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/ta_btn_config"
+            android:contentDescription="@string/content_description" />
+
+        <ImageButton
+            android:id="@+id/buttonPTY"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="35dp"
+            android:layout_marginTop="35dp"
+            android:background="@drawable/pty_btn_config"
+            android:contentDescription="@string/content_description" />
+
+        <ImageButton
+            android:id="@+id/buttonLOC"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/buttonPTY"
+            android:layout_marginRight="35dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/loc_btn_config"
+            android:contentDescription="@string/content_description" />
+
+        <ImageButton
+            android:id="@+id/buttonFrequency"
+            android:layout_width="0dip"
+            android:layout_height="0dip"
+            android:layout_marginLeft="750dip"
+            android:layout_marginTop="40dip"
+            android:background="@drawable/frequence_btn_config"
+            android:contentDescription="@string/content_description" />
+
+        <!-- 中间显示的频点 -->
+
+        <TextView
+            android:id="@+id/FmNum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="80dp"
+            android:background="@drawable/number_bg" />
+
+        <!-- 显示频点类型AM/FM -->
+
+        <TextView
+            android:id="@+id/FmType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/FmNum"
+            android:layout_marginRight="20dp"
+            android:layout_toLeftOf="@id/FmNum"
+            android:background="@drawable/fm1" />
+
+        <!-- 显示频点单位MHZ/KHZ -->
+
+        <TextView
+            android:id="@+id/FmHz"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/FmNum"
+            android:layout_toRightOf="@id/FmNum"
+            android:background="@drawable/mhz" />
+
+        <TextView
+            android:id="@+id/FmState"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/FmNum"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="30dp"
+            android:text="LOC"
+            android:textColor="#edf1ff"
+            android:textSize="22sp" />
+
+        <TextView
+            android:id="@+id/FmFlag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
+            android:layout_toLeftOf="@id/FmState"
+            android:textColor="#edf1ff"
+            android:textSize="22sp" />
+
+        <!-- 显示时间控件，暂时不需要 -->
+
+        <TextView
+            android:id="@+id/FmTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="400dip"
+            android:layout_marginTop="25dip"
+            android:text="00:00"
+            android:textSize="36sp"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/imageSignal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_toRightOf="@id/FmState"
+            android:background="@drawable/signal_0"
+            android:contentDescription="@string/content_description"
+            android:visibility="visible" />
+
+        <TextView
+            android:id="@+id/Signal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="810dip"
+            android:layout_marginTop="35dip"
+            android:text="00"
+            android:textSize="26sp"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/RadioStation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="400dip"
+            android:layout_marginTop="170dip"
+            android:text=""
+            android:textColor="#edf1ff"
+            android:textSize="22sp"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/ptyStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_toRightOf="@id/imageSignal"
+            android:text="pty"
+            android:textColor="#edf1ff"
+            android:textSize="22sp" />
+
+        <TextView
+            android:id="@+id/textViewTA"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
+            android:layout_toLeftOf="@id/FmFlag"
+            android:gravity="center"
+            android:text="ta"
+            android:textColor="#edf1ff"
+            android:textSize="22sp"
+            android:visibility="visible" />
+
+        <TextView
+            android:id="@+id/textViewAF"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
+            android:layout_toLeftOf="@id/textViewTA"
+            android:gravity="center"
+            android:text="af"
+            android:textColor="#edf1ff"
+            android:textSize="22sp"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/textViewTP"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="860dip"
+            android:layout_marginTop="130dip"
+            android:gravity="center"
+            android:text=""
+            android:textColor="#edf1ff"
+            android:textSize="22sp"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+    <!-- 最底下的一行按钮 -->
+
+    <ImageButton
+        android:id="@+id/move"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/next_page_btn_selector"
+        android:contentDescription="@string/content_description" />
+
+    <LinearLayout
+        android:id="@+id/linearlayout_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/move"
+        android:layout_alignTop="@id/move"
+        android:layout_toLeftOf="@id/move" >
+
+        <com.apical.apicalradio.HScrollViewGroup
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/hsView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <ImageButton
+                android:id="@+id/buttonPreChannel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/pre_channel_btn"
+                android:contentDescription="@string/content_description" />
+
+            <ImageButton
+                android:id="@+id/buttonPreSearch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/pre_search_btn"
+                android:contentDescription="@string/content_description" />
+
+            <ImageButton
+                android:id="@+id/buttonNextSearch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/next_search_btn"
+                android:contentDescription="@string/content_description" />
+
+            <ImageButton
+                android:id="@+id/buttonNextChannel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/next_channel_btn"
+                android:contentDescription="@string/content_description" />
+
+            <ImageButton
+                android:id="@+id/buttonAutoSearch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/auto_search_btn"
+                android:contentDescription="@string/content_description" />
+
+            <ImageButton
+                android:id="@+id/buttonBrower"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/brower_btn"
+                android:contentDescription="@string/content_description" />
+
+            <ImageButton
+                android:id="@+id/buttonFmAm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/fm_am_btn"
+                android:contentDescription="@string/content_description" />
+
+            <ImageButton
+                android:id="@+id/buttonEqual"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/equal_btn_config"
+                android:contentDescription="@string/content_description" />
+        </com.apical.apicalradio.HScrollViewGroup>
+    </LinearLayout>
+
+    <!-- 保存频点显示共六个 -->
+
+    <RelativeLayout
+        android:id="@+id/linearLayoutChannelSave"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/linearlayout_btn"
+        android:background="@drawable/channel_save_bg" >
+
+        <ImageButton
+            android:id="@+id/buttonLeft"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="15dip"
+            android:layout_marginTop="10dip"
+            android:background="@drawable/left_btn"
+            android:contentDescription="@string/content_description"
+            android:visibility="gone" />
+
+        <ImageButton
+            android:id="@+id/buttonRight"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="30dip"
+            android:layout_marginTop="10dip"
+            android:background="@drawable/right_btn"
+            android:contentDescription="@string/content_description"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/FmChannel1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="65dp"
+            android:layout_marginTop="10dip"
+            android:background="@drawable/channel1"
+            android:gravity="right|center_vertical"
+            android:paddingRight="10dp"
+            android:text="88.5"
+            android:textColor="#006aa2"
+            android:textSize="30sp" />
+
+        <TextView
+            android:id="@+id/FmChannel6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="65dp"
+            android:layout_marginTop="10dip"
+            android:background="@drawable/channel6"
+            android:gravity="left|center_vertical"
+            android:paddingLeft="10dp"
+            android:text="88.5"
+            android:textColor="#006aa2"
+            android:textSize="30sp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/FmChannel6"
+            android:layout_toRightOf="@id/FmChannel1"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/FmChannel2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dip"
+                android:layout_weight="1"
+                android:background="@drawable/channel2"
+                android:gravity="center"
+                android:text="88.5"
+                android:textColor="#006aa2"
+                android:textSize="30sp" />
+
+            <TextView
+                android:id="@+id/FmChannel3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dip"
+                android:layout_weight="1"
+                android:background="@drawable/channel3"
+                android:gravity="center"
+                android:text="88.5"
+                android:textColor="#006aa2"
+                android:textSize="30sp" />
+
+            <TextView
+                android:id="@+id/FmChannel4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dip"
+                android:layout_weight="1"
+                android:background="@drawable/channel4"
+                android:gravity="center"
+                android:text="88.5"
+                android:textColor="#006aa2"
+                android:textSize="30sp" />
+
+            <TextView
+                android:id="@+id/FmChannel5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dip"
+                android:layout_weight="1"
+                android:background="@drawable/channel5"
+                android:gravity="center"
+                android:text="88.5"
+                android:textColor="#006aa2"
+                android:textSize="30sp" />
+        </LinearLayout>
+    </RelativeLayout>
+
+</RelativeLayout>

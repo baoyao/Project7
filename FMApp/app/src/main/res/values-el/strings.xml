@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">ραδιόφωνο</string>
+    <string name="hello_world">Γεια σας κόσμο!</string>
+    <string name="menu_settings">Ρύθμιση</string>
+    
+        <!-- 退出对话框 -->
+    <string name="quit_dlg_title">Έξοδος από το λογισμικό</string>
+    <string name="quit_dlg_msg">Είτε Software Radio εξόδου</string>
+    <string name="quit_dlg_ok">Κλείστε</string>
+    <string name="quit_dlg_cancel">δεν έξοδο</string>
+
+</resources>

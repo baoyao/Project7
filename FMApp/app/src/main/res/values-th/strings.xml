@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">วิทยุ</string>
+    <string name="hello_world">สวัสดีชาวโลก</string>
+    <string name="menu_settings">จัดตั้งขึ้น</string>
+    
+        <!-- 退出对话框 -->
+    <string name="quit_dlg_title">ออกจากซอฟแวร์</string>
+    <string name="quit_dlg_msg">ไม่ว่าจะเป็นซอฟแวร์วิทยุออก</string>
+    <string name="quit_dlg_ok">เลิก</string>
+    <string name="quit_dlg_cancel">ไม่ออก</string>
+
+</resources>

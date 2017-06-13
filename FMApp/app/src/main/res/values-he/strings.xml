@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">רדיו</string>
+    <string name="hello_world">שלום עולם!</string>
+    <string name="menu_settings">להקים</string>
+    
+        <!-- 退出对话框 -->
+    <string name="quit_dlg_title">צא מתוכנה</string>
+    <string name="quit_dlg_msg">אם תוכנה ברדיו יציאה</string>
+    <string name="quit_dlg_ok">להפסיק</string>
+    <string name="quit_dlg_cancel">לא יוצא</string>
+
+</resources>

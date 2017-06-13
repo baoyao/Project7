@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">radio</string>
+    <string name="hello_world">Moikka maailma!</string>
+    <string name="menu_settings">perustettu</string>
+    
+        <!-- 退出对话框 -->
+    <string name="quit_dlg_title">Poistu Software</string>
+    <string name="quit_dlg_msg">Olipa exit radio-ohjelmisto</string>
+    <string name="quit_dlg_ok">lopettaa</string>
+    <string name="quit_dlg_cancel">ei poistu</string>
+
+</resources>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">radio</string>
+    <string name="hello_world">Xin chào thế giới!</string>
+    <string name="menu_settings">thành lập</string>
+    
+        <!-- 退出对话框 -->
+    <string name="quit_dlg_title">thoát khỏi phần mềm</string>
+    <string name="quit_dlg_msg">Cho dù phần mềm phát thanh thoát</string>
+    <string name="quit_dlg_ok">bỏ</string>
+    <string name="quit_dlg_cancel">không thoát</string>
+
+</resources>

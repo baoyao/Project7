@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Radio</string>
+    <string name="hello_world">Hej världen!</string>
+    <string name="menu_settings">Ställ upp</string>
+    
+        <!-- 退出对话框 -->
+    <string name="quit_dlg_title">Avsluta Programvara</string>
+    <string name="quit_dlg_msg">Vare exit radio programvara</string>
+    <string name="quit_dlg_ok">Avsluta</string>
+    <string name="quit_dlg_cancel">Har inte avsluta</string>
+
+</resources>

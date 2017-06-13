@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">ラジオ</string>
+    <string name="hello_world">こんにちは、世界！</string>
+    <string name="menu_settings">セットアップする</string>
+    
+        <!-- 退出对话框 -->
+    <string name="quit_dlg_title">ソフトウェアを終了する</string>
+    <string name="quit_dlg_msg">出口ラジオソフトウェアかどうか</string>
+    <string name="quit_dlg_ok">やめる</string>
+    <string name="quit_dlg_cancel">終了しません</string>
+
+</resources>

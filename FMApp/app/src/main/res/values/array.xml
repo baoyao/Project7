@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<string-array name="pty">
+    <item>NO PTY</item>
+    <item>NEWS</item>
+    <item>AFFAIRS</item>
+    <item>INFO</item>
+    <item>SPORT</item>
+    <item>EDUCATE</item>
+    <item>DRAMA</item>
+    <item>CULTURE</item>
+    <item>SCIENCE</item>    
+    <item>VARIED</item>    
+    <item>POP M</item>    
+    <item>ROCK M</item>    
+    <item>EASY M</item>    
+    <item>LIGHT M</item>    
+    <item>CLASSICS</item>    
+    <item>OTHER M</item>    
+    <item>WEATHER</item>    
+    <item>FINANCE</item>    
+    <item>CHILDREN</item>    
+    <item>SOCIAL</item>    
+    <item>RELIGION</item>    
+    <item>PHONE IN</item>    
+    <item>TRAVEL</item>    
+    <item>LEISURE</item>    
+    <item>JAZZ</item>    
+    <item>COUNTRY</item>    
+    <item>NATION M</item>    
+    <item>OLDIES</item>    
+    <item>FOLK M</item>    
+    <item>DOCUMENT</item>    
+    <item>TEST</item>    
+    <item>ALARM!</item>    
+    <item> Nothing!</item>    
+</string-array>
+</resources>
+

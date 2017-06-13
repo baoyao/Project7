@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Radio</string>
+    <string name="hello_world">Bonjour tout le monde!</string>
+    <string name="menu_settings">Mettre en place</string>
+    
+        <!-- 退出对话框 -->
+    <string name="quit_dlg_title">Sortie Software</string>
+    <string name="quit_dlg_msg">Que logiciel radio de sortie</string>
+    <string name="quit_dlg_ok">quitter</string>
+    <string name="quit_dlg_cancel">ne quitte pas</string>
+
+</resources>
