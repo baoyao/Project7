@@ -43,8 +43,8 @@ public class RadioMainActivity extends BaseActivity {
 	private static final int SEND_RADIO_CTRL = 0x02; // ��������������ID
 	private ApicalHardwareCtrl mApicalHawreCtrl; // apicalӲ�����ƽӿ�
 	// Ĭ�ϵĳ�����Ϣ
-	private static short MIN_CHANNEL = (short) 87.50; // FM��СƵ��
-	private static short MAX_CHANNEL = (short) 108.00; // FM��СƵ��
+	private static short MIN_CHANNEL = (short) 53.10;//87.50
+	private static short MAX_CHANNEL = (short) 162.90;//108.00
 	private static final String AM_MIN_CHANNEL = "531"; // AM��СƵ��
 	private static final String AM_MAX_CHANNEL = "1629"; // AM��СƵ��
 	private static final String FM_UNIT_HZ = "FM \nMHz"; // FM��λ
@@ -417,21 +417,18 @@ public class RadioMainActivity extends BaseActivity {
 	 * qulingling 20130828 初始化界面控件
 	 */
 	private void InitInterface() {
-		// Ƶ��ѡ��
 		mSeekBar = (SeekBar) findViewById(R.id.seekBarProgress);
-		mSeekBar.setMax(MAX_CHANNEL - MIN_CHANNEL);
+		mSeekBar.setMax((MAX_CHANNEL - MIN_CHANNEL)*100);
 		mSeekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
-			// FMƵ��
 			float showFreq = 0.0f;
-			// AMƵ��
 			int showNum = 0;
-			// �Ƿ���л����л�
 			boolean onTouchStick = false;
 
 			public void onProgressChanged(SeekBar seekBar, int progress,
 					boolean fromUser) {
 				Log.e(TAG, "mSeekBar.onProgressChanged(" + seekBar + ", "
 						+ progress + ", " + fromUser + ")");
+				progress = progress/100;
 				if (onTouchStick) {
 					// FM
 					if ((mRadioBandType <= FM3) && (mRadioBandType >= FM1)) {
@@ -449,6 +446,7 @@ public class RadioMainActivity extends BaseActivity {
 						// SetAMFreq(showNum);
 					}
 				}
+
 			}
 
 			public void onStartTrackingTouch(SeekBar seekBar) {

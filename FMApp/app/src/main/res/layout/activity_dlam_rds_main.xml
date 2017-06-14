@@ -14,8 +14,8 @@
         android:background="@drawable/am_channel_bg"
         android:maxHeight="18dip"
         android:minHeight="18dip"
-        android:paddingLeft="154dip"
-        android:paddingRight="154dip"
+        android:paddingLeft="207dip"
+        android:paddingRight="214dip"
         android:progressDrawable="@drawable/seek_img"
         android:thumb="@drawable/thumb_selector"
         android:thumbOffset="18dip" />
