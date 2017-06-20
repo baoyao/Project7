@@ -31,6 +31,7 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.apical.apicalradio.HScrollViewGroup.Direction;
 import com.example.fmapp.R;
@@ -290,6 +291,11 @@ public class RadioMainActivity extends BaseActivity {
 	}
 
 	@Override
+	protected void onStart() {
+		super.onStart();
+	}
+
+	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
@@ -463,7 +469,7 @@ public class RadioMainActivity extends BaseActivity {
 				if ((mRadioBandType <= FM3) && (mRadioBandType >= FM1)) {
 					SetFMFreq(showFreq);
 				} else {
-					Log.v("tt","onStopTrackingTouch showNum: "+showNum);
+					Log.v("t","onStopTrackingTouch showNum: "+showNum);
 					FMUtil.tune(showNum*100);
 					SetAMFreq(showNum);
 				}
@@ -1157,10 +1163,14 @@ public class RadioMainActivity extends BaseActivity {
 	private void startAudioSettings() {
 		bAudioSet = true;
 
-		Intent i = new Intent();
-		i.setClassName("com.android.settings",
-				"com.android.settings.apical.AudioSettings");
-		startActivity(i);
+		try {
+			Intent i = new Intent();
+			i.setClassName("com.android.settings",
+					"com.android.settings.apical.AudioSettings");
+			startActivity(i);
+		}catch (Exception e){
+			Toast.makeText(this,"没有找到设置",Toast.LENGTH_SHORT).show();
+		}
 	}
 
 	/*

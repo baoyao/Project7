@@ -8,7 +8,6 @@ public class FMUtil {
     }
     /**
      * path ="/dev/fm"
-     * @param path
      */
     public static native void openDevice(String path);
 
@@ -16,20 +15,17 @@ public class FMUtil {
 
     /**
      * arg = 1
-     * @param arg
      */
     public static native void powerOn(int arg);
 
     /**
      * arg = 0
-     * @param arg
      */
     public static native void powerDown(int arg);
 
     /**
      * arg = 8980
      * frequency:89.8
-     * @param arg
      */
     public static native void tune(int arg);
 
