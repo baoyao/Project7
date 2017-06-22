@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/radio_bg"
-    tools:context=".MainActivity" >
+    tools:context="com.apical.apicalradio.RadioMainActivity" >
 
     <SeekBar
         android:id="@+id/seekBarProgress"
@@ -318,7 +318,7 @@
             android:layout_marginTop="10dip"
             android:background="@drawable/left_btn"
             android:contentDescription="@string/content_description"
-            android:visibility="gone" />
+            android:visibility="visible" />
 
         <ImageButton
             android:id="@+id/buttonRight"
@@ -329,7 +329,7 @@
             android:layout_marginTop="10dip"
             android:background="@drawable/right_btn"
             android:contentDescription="@string/content_description"
-            android:visibility="gone" />
+            android:visibility="visible" />
 
         <TextView
             android:id="@+id/FmChannel1"
@@ -337,7 +337,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="65dp"
             android:layout_marginTop="10dip"
-            android:background="@drawable/channel1"
+            android:background="@drawable/save_channel_top_selector"
             android:gravity="right|center_vertical"
             android:paddingRight="10dp"
             android:text="88.5"
@@ -351,7 +351,7 @@
             android:layout_alignParentRight="true"
             android:layout_marginRight="65dp"
             android:layout_marginTop="10dip"
-            android:background="@drawable/channel6"
+            android:background="@drawable/save_channel_end_selector"
             android:gravity="left|center_vertical"
             android:paddingLeft="10dp"
             android:text="88.5"
@@ -371,7 +371,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dip"
                 android:layout_weight="1"
-                android:background="@drawable/channel2"
+                android:background="@drawable/save_channel_center_selector"
                 android:gravity="center"
                 android:text="88.5"
                 android:textColor="#006aa2"
@@ -383,7 +383,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dip"
                 android:layout_weight="1"
-                android:background="@drawable/channel3"
+                android:background="@drawable/save_channel_center_selector"
                 android:gravity="center"
                 android:text="88.5"
                 android:textColor="#006aa2"
@@ -395,7 +395,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dip"
                 android:layout_weight="1"
-                android:background="@drawable/channel4"
+                android:background="@drawable/save_channel_center_selector"
                 android:gravity="center"
                 android:text="88.5"
                 android:textColor="#006aa2"
@@ -407,7 +407,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dip"
                 android:layout_weight="1"
-                android:background="@drawable/channel5"
+                android:background="@drawable/save_channel_center_selector"
                 android:gravity="center"
                 android:text="88.5"
                 android:textColor="#006aa2"

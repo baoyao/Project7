@@ -14,7 +14,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -36,6 +38,10 @@ import android.widget.Toast;
 import com.apical.apicalradio.HScrollViewGroup.Direction;
 import com.example.fmapp.R;
 import com.example.fmutil.FMUtil;
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.appindexing.Thing;
+import com.google.android.gms.common.api.GoogleApiClient;
 
 
 public class RadioMainActivity extends BaseActivity {
@@ -46,22 +52,28 @@ public class RadioMainActivity extends BaseActivity {
 	// Ĭ�ϵĳ�����Ϣ
 	private static short MIN_CHANNEL = (short) 53.10;//87.50
 	private static short MAX_CHANNEL = (short) 162.90;//108.00
+	private int mCurrentChannel = MIN_CHANNEL*100;
 	private static final String AM_MIN_CHANNEL = "531"; // AM��СƵ��
 	private static final String AM_MAX_CHANNEL = "1629"; // AM��СƵ��
 	private static final String FM_UNIT_HZ = "FM \nMHz"; // FM��λ
 	private static final String AM_UNIT_HZ = "AM \nKHz"; // AM��λ
 	// ������״̬����
 	private static final byte STATUS1_SEEK_AS = 0x01; // �Զ��Ѵ������־����ʾAS����Auto
-														// Store
+	// Store
 	private static final byte STATUS1_SEEK_PS = 0x08; // Ԥ��������־����ʾPS����Preset
-														// Scan
+	// Scan
 	private static final byte STATUS1_SEEK_AF = 0x10; // Ԥ��������־����ʾPS����Preset
-														// Scan
+	// Scan
 	private static final byte STATUS1_SEEK_TA = 0x20; // Ԥ��������־����ʾPS����Preset
-														// Scan
+	// Scan
 	private static final int STATUS1_SEEK_RDS = 0x80; // Ԥ��������־����ʾPS����Preset
-														// Scan
+	// Scan
 	private static final byte STATUS2_SEEK_LOC = 0x02; // Զ��̱�־��0��ʾԶ�̣�1��ʾ���
+	/**
+	 * ATTENTION: This was auto-generated to implement the App Indexing API.
+	 * See https://g.co/AppIndexing/AndroidStudio for more information.
+	 */
+	private GoogleApiClient client;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState, PersistableBundle persistentState) {
@@ -158,17 +170,43 @@ public class RadioMainActivity extends BaseActivity {
 		public void handleMessage(Message msg) {
 			super.handleMessage(msg);
 			switch (msg.what) {
-			case REFLASH_TIME:
-				ReflashTime();
-				break;
-			case SEND_RADIO_CTRL:
-				mRadioController.GetRadioCurFreq();
-				break;
-			default:
-				break;
+				case REFLASH_TIME:
+					ReflashTime();
+					break;
+				case SEND_RADIO_CTRL:
+					mRadioController.GetRadioCurFreq();
+					break;
+				default:
+					break;
 			}
 		}
 	};
+
+	/**
+	 * ATTENTION: This was auto-generated to implement the App Indexing API.
+	 * See https://g.co/AppIndexing/AndroidStudio for more information.
+	 */
+	public Action getIndexApiAction() {
+		Thing object = new Thing.Builder()
+				.setName("RadioMain Page") // TODO: Define a title for the content shown.
+				// TODO: Make sure this auto-generated URL is correct.
+				.setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
+				.build();
+		return new Action.Builder(Action.TYPE_VIEW)
+				.setObject(object)
+				.setActionStatus(Action.STATUS_TYPE_COMPLETED)
+				.build();
+	}
+
+	@Override
+	public void onStop() {
+		super.onStop();
+
+		// ATTENTION: This was auto-generated to implement the App Indexing API.
+		// See https://g.co/AppIndexing/AndroidStudio for more information.
+		AppIndex.AppIndexApi.end(client, getIndexApiAction());
+		client.disconnect();
+	}
 
 	// ʱ������߳�
 	class TimeThread extends Thread {
@@ -271,10 +309,10 @@ public class RadioMainActivity extends BaseActivity {
 				}
 
 				switch (event.getKeyCode()) {
-				case KeyEvent.KEYCODE_MEDIA_STOP:
-					mRadioController.CloseRadio();
-					finish();
-					break;
+					case KeyEvent.KEYCODE_MEDIA_STOP:
+						mRadioController.CloseRadio();
+						finish();
+						break;
 				}
 			}
 		}
@@ -292,7 +330,12 @@ public class RadioMainActivity extends BaseActivity {
 
 	@Override
 	protected void onStart() {
-		super.onStart();
+		super.onStart();// ATTENTION: This was auto-generated to implement the App Indexing API.
+// See https://g.co/AppIndexing/AndroidStudio for more information.
+		client.connect();
+		// ATTENTION: This was auto-generated to implement the App Indexing API.
+		// See https://g.co/AppIndexing/AndroidStudio for more information.
+		AppIndex.AppIndexApi.start(client, getIndexApiAction());
 	}
 
 	@Override
@@ -345,7 +388,7 @@ public class RadioMainActivity extends BaseActivity {
 			}
 		} else {
 			// setContentView(R.layout.activity_radio_rds_main);
-			setContentView(R.layout.activity_dlam_rds_main);
+			setContentView(R.layout.activity_dlam_rds_main);//第一次启动使用的是这个布局
 			/*
 			 * if (mRDSEn == 0x01) {
 			 * setContentView(R.layout.activity_radio_xg_rds_main); } else {
@@ -367,6 +410,9 @@ public class RadioMainActivity extends BaseActivity {
 		InitTimer();
 
 		radioInstance = this;
+		// ATTENTION: This was auto-generated to implement the App Indexing API.
+		// See https://g.co/AppIndexing/AndroidStudio for more information.
+		client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
 	}
 
 	/*
@@ -419,36 +465,46 @@ public class RadioMainActivity extends BaseActivity {
 
 	}
 
+	private void setCurrentChannel(int channel){
+		mCurrentChannel = channel;
+		SPUtils.saveConfig(this,"CURRENT_CHANNEL",""+channel);
+	}
+
+	public int getCurrentChannel(){
+		return mCurrentChannel;
+	}
+
 	/*
 	 * qulingling 20130828 初始化界面控件
 	 */
 	private void InitInterface() {
 		mSeekBar = (SeekBar) findViewById(R.id.seekBarProgress);
-		mSeekBar.setMax((MAX_CHANNEL - MIN_CHANNEL)*100);
+		mSeekBar.setMax((MAX_CHANNEL - MIN_CHANNEL) * 100);
+		setCurrentChannelAtSeekBar(Integer.parseInt(SPUtils.getConfig(this,"CURRENT_CHANNEL","9050")));
 		mSeekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 			float showFreq = 0.0f;
-			int showNum = 0;
+			float showNum = 0;
 			boolean onTouchStick = false;
 
 			public void onProgressChanged(SeekBar seekBar, int progress,
-					boolean fromUser) {
+										  boolean fromUser) {
 				Log.e(TAG, "mSeekBar.onProgressChanged(" + seekBar + ", "
 						+ progress + ", " + fromUser + ")");
-				progress = progress/100;
+				progress= progress / 10;//省略最后一位数
 				if (onTouchStick) {
 					// FM
 					if ((mRadioBandType <= FM3) && (mRadioBandType >= FM1)) {
-						int showNum = MIN_CHANNEL + progress;
+						float showNum = MIN_CHANNEL + progress/10f;
 						showFreq = showNum / 100.0f;
 						mChannelNumShowTextView
 								.setBackgroundDrawable(new BitmapDrawable(
 										picNum.getFloatPic(showFreq)));
 						// SetFMFreq(showFreq);
-					} else {
-						showNum = MIN_CHANNEL + progress;
+					} else {//执行这里
+						showNum = MIN_CHANNEL + progress/10f;
 						mChannelNumShowTextView
 								.setBackgroundDrawable(new BitmapDrawable(
-										picNum.getIntPic(showNum)));
+										picNum.getFloatPic(showNum)));
 						// SetAMFreq(showNum);
 					}
 				}
@@ -469,9 +525,10 @@ public class RadioMainActivity extends BaseActivity {
 				if ((mRadioBandType <= FM3) && (mRadioBandType >= FM1)) {
 					SetFMFreq(showFreq);
 				} else {
-					Log.v("t","onStopTrackingTouch showNum: "+showNum);
-					FMUtil.tune(showNum*100);
-					SetAMFreq(showNum);
+					Log.v("t", "onStopTrackingTouch showNum: " + showNum);
+					FMUtil.tune((int)(showNum * 100));
+					setCurrentChannel((int)(showNum * 100));
+					SetAMFreq((int)showNum);
 				}
 			}
 		});
@@ -502,28 +559,28 @@ public class RadioMainActivity extends BaseActivity {
 			public void onClick(View view) {
 				Log.d(TAG, "fMAMImageButton.onClick(" + view + ")");
 				switch (mRadioBandType) {
-				case FM1:
-					mRadioController
-							.RadioCtrl(RadioController.RADIO_SWITCH_FM2);
-					break;
-				case FM2:
-					mRadioController
-							.RadioCtrl(RadioController.RADIO_SWITCH_FM3);
-					break;
-				case FM3:
-					mRadioController
-							.RadioCtrl(RadioController.RADIO_SWITCH_AM1);
-					break;
-				case AM1:
-					mRadioController
-							.RadioCtrl(RadioController.RADIO_SWITCH_AM2);
-					break;
-				case AM2:
-					mRadioController
-							.RadioCtrl(RadioController.RADIO_SWITCH_FM1);
-					break;
-				default:
-					break;
+					case FM1:
+						mRadioController
+								.RadioCtrl(RadioController.RADIO_SWITCH_FM2);
+						break;
+					case FM2:
+						mRadioController
+								.RadioCtrl(RadioController.RADIO_SWITCH_FM3);
+						break;
+					case FM3:
+						mRadioController
+								.RadioCtrl(RadioController.RADIO_SWITCH_AM1);
+						break;
+					case AM1:
+						mRadioController
+								.RadioCtrl(RadioController.RADIO_SWITCH_AM2);
+						break;
+					case AM2:
+						mRadioController
+								.RadioCtrl(RadioController.RADIO_SWITCH_FM1);
+						break;
+					default:
+						break;
 				}
 			}
 		});
@@ -725,12 +782,48 @@ public class RadioMainActivity extends BaseActivity {
 		mRadioChannelSave5 = (TextView) findViewById(R.id.FmChannel5);
 		mRadioChannelSave6 = (TextView) findViewById(R.id.FmChannel6);
 
-		mRadioChannelSave1.setOnTouchListener(textViewTouchListener);
-		mRadioChannelSave2.setOnTouchListener(textViewTouchListener);
-		mRadioChannelSave3.setOnTouchListener(textViewTouchListener);
-		mRadioChannelSave4.setOnTouchListener(textViewTouchListener);
-		mRadioChannelSave5.setOnTouchListener(textViewTouchListener);
-		mRadioChannelSave6.setOnTouchListener(textViewTouchListener);
+		mRadioChannelSave1.setOnClickListener(mOnSaveChannelClick);
+		mRadioChannelSave2.setOnClickListener(mOnSaveChannelClick);
+		mRadioChannelSave3.setOnClickListener(mOnSaveChannelClick);
+		mRadioChannelSave4.setOnClickListener(mOnSaveChannelClick);
+		mRadioChannelSave5.setOnClickListener(mOnSaveChannelClick);
+		mRadioChannelSave6.setOnClickListener(mOnSaveChannelClick);
+
+		mRadioChannelSave1.setOnLongClickListener(mOnSaveChannelLongClick);
+		mRadioChannelSave2.setOnLongClickListener(mOnSaveChannelLongClick);
+		mRadioChannelSave3.setOnLongClickListener(mOnSaveChannelLongClick);
+		mRadioChannelSave4.setOnLongClickListener(mOnSaveChannelLongClick);
+		mRadioChannelSave5.setOnLongClickListener(mOnSaveChannelLongClick);
+		mRadioChannelSave6.setOnLongClickListener(mOnSaveChannelLongClick);
+
+		if(isFirstRun()){
+			mRadioChannelSave1.setText("90.5");
+			mRadioChannelSave2.setText("104.3");
+			mRadioChannelSave3.setText("0");
+			mRadioChannelSave4.setText("0");
+			mRadioChannelSave5.setText("0");
+			mRadioChannelSave6.setText("0");
+			SPUtils.saveConfig(this,"SAVE_CHANNEL1","90.5");
+			SPUtils.saveConfig(this,"SAVE_CHANNEL2","104.3");
+			SPUtils.saveConfig(this,"SAVE_CHANNEL3","0");
+			SPUtils.saveConfig(this,"SAVE_CHANNEL4","0");
+			SPUtils.saveConfig(this,"SAVE_CHANNEL5","0");
+			SPUtils.saveConfig(this,"SAVE_CHANNEL6","0");
+		}else{
+			mRadioChannelSave1.setText(SPUtils.getConfig(this,"SAVE_CHANNEL1","0"));
+			mRadioChannelSave2.setText(SPUtils.getConfig(this,"SAVE_CHANNEL2","0"));
+			mRadioChannelSave3.setText(SPUtils.getConfig(this,"SAVE_CHANNEL3","0"));
+			mRadioChannelSave4.setText(SPUtils.getConfig(this,"SAVE_CHANNEL4","0"));
+			mRadioChannelSave5.setText(SPUtils.getConfig(this,"SAVE_CHANNEL5","0"));
+			mRadioChannelSave6.setText(SPUtils.getConfig(this,"SAVE_CHANNEL6","0"));
+		}
+
+//		mRadioChannelSave1.setOnTouchListener(textViewTouchListener);
+//		mRadioChannelSave2.setOnTouchListener(textViewTouchListener);
+//		mRadioChannelSave3.setOnTouchListener(textViewTouchListener);
+//		mRadioChannelSave4.setOnTouchListener(textViewTouchListener);
+//		mRadioChannelSave5.setOnTouchListener(textViewTouchListener);
+//		mRadioChannelSave6.setOnTouchListener(textViewTouchListener);
 
 		// Ƶ������
 		mRadioBandTypeTextView = (TextView) findViewById(R.id.FmType);
@@ -762,7 +855,82 @@ public class RadioMainActivity extends BaseActivity {
 		mTPStatus = (TextView) findViewById(R.id.textViewTP);
 	}
 
-	// ����TextView��Touch�¼�
+	private boolean isFirstRun(){
+		return SPUtils.getConfig(this,"FIRST_RUN","true").equals("true");
+	}
+
+	private OnClickListener mOnSaveChannelClick=new OnClickListener() {
+		@Override
+		public void onClick(View view) {
+			int channelNum = (int)(Float.parseFloat(((TextView)view).getText().toString())*100);
+			if(channelNum==0){
+				return;
+			}
+			FMUtil.tune(channelNum);
+			setCurrentChannel(channelNum);
+			setCurrentChannelAtSeekBar(channelNum);
+			Toast.makeText(RadioMainActivity.this,"播放电台"+((TextView)view).getText(),Toast.LENGTH_SHORT).show();
+		}
+	};
+
+	private void setCurrentChannelAtSeekBar(int channelNum){
+		mSeekBar.setProgress(channelNum-(MIN_CHANNEL*100));
+		mChannelNumShowTextView
+				.setBackgroundDrawable(new BitmapDrawable(
+						picNum.getFloatPic(channelNum/100f)));
+	}
+
+	private View.OnLongClickListener mOnSaveChannelLongClick = new View.OnLongClickListener() {
+		@Override
+		public boolean onLongClick(View view) {
+			buildSaveDeleteChannelDialog(view);
+			return true;
+		}
+	};
+
+	private void buildSaveDeleteChannelDialog(final View view){
+		int selectChannel = 0;
+		switch (view.getId()){
+			case R.id.FmChannel1:
+				selectChannel = 1;
+				break;
+			case R.id.FmChannel2:
+				selectChannel = 2;
+				break;
+			case R.id.FmChannel3:
+				selectChannel = 3;
+				break;
+			case R.id.FmChannel4:
+				selectChannel = 4;
+				break;
+			case R.id.FmChannel5:
+				selectChannel = 5;
+				break;
+			case R.id.FmChannel6:
+				selectChannel = 6;
+				break;
+		}
+
+		final int selectChannelFinal=selectChannel;
+
+		AlertDialog.Builder builder=new AlertDialog.Builder(this);
+		builder.setItems(new CharSequence[]{"收藏当前电台","删除此电台"}, new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialogInterface, int i) {
+				if(i==0){//收藏
+					SPUtils.saveConfig(RadioMainActivity.this,"SAVE_CHANNEL"+selectChannelFinal,getCurrentChannel()/100f+"");
+					((TextView)view).setText(getCurrentChannel()/100f+"");
+					Toast.makeText(RadioMainActivity.this,"收藏当前到电台列表"+selectChannelFinal,Toast.LENGTH_SHORT).show();
+				}else{//删除
+					SPUtils.saveConfig(RadioMainActivity.this,"SAVE_CHANNEL"+selectChannelFinal,0+"");
+					((TextView)view).setText(0+"");
+					Toast.makeText(RadioMainActivity.this,"删除收藏电台"+selectChannelFinal,Toast.LENGTH_SHORT).show();
+				}
+			}
+		});
+		builder.show();
+	}
+
 	public OnTouchListener textViewTouchListener = new OnTouchListener() {
 		boolean bLongPress = false;
 
@@ -998,6 +1166,7 @@ public class RadioMainActivity extends BaseActivity {
 		super.onDestroy();
 
 		FMUtil.onApplicationDestory();//add by bao
+		SPUtils.saveConfig(this,"FIRST_RUN","false");
 	}
 
 	@Override
@@ -1104,29 +1273,29 @@ public class RadioMainActivity extends BaseActivity {
 		mRadioBandType = bandType;
 		int resid = 0;
 		switch (bandType) {
-		case FM1:
-			resid = R.drawable.fm1;
-			LOCImageButton.setEnabled(true);
-			break;
-		case FM2:
-			resid = R.drawable.fm2;
-			LOCImageButton.setEnabled(true);
-			break;
-		case FM3:
-			resid = R.drawable.fm3;
-			LOCImageButton.setEnabled(true);
-			break;
-		case AM1:
-			resid = R.drawable.am1;
-			LOCImageButton.setEnabled(false);
-			break;
-		case AM2:
-			resid = R.drawable.am2;
-			LOCImageButton.setEnabled(false);
-			break;
-		default:
-			resid = R.drawable.fm1;
-			break;
+			case FM1:
+				resid = R.drawable.fm1;
+				LOCImageButton.setEnabled(true);
+				break;
+			case FM2:
+				resid = R.drawable.fm2;
+				LOCImageButton.setEnabled(true);
+				break;
+			case FM3:
+				resid = R.drawable.fm3;
+				LOCImageButton.setEnabled(true);
+				break;
+			case AM1:
+				resid = R.drawable.am1;
+				LOCImageButton.setEnabled(false);
+				break;
+			case AM2:
+				resid = R.drawable.am2;
+				LOCImageButton.setEnabled(false);
+				break;
+			default:
+				resid = R.drawable.fm1;
+				break;
 		}
 
 		mRadioBandTypeTextView.setBackgroundResource(resid);
@@ -1134,26 +1303,26 @@ public class RadioMainActivity extends BaseActivity {
 
 	protected void SetSaveFreqText(int index, String curFreqStr) {
 		switch (index) {
-		case 0x01:
-			mRadioChannelSave1.setText(curFreqStr);
-			break;
-		case 0x02:
-			mRadioChannelSave2.setText(curFreqStr);
-			break;
-		case 0x03:
-			mRadioChannelSave3.setText(curFreqStr);
-			break;
-		case 0x04:
-			mRadioChannelSave4.setText(curFreqStr);
-			break;
-		case 0x05:
-			mRadioChannelSave5.setText(curFreqStr);
-			break;
-		case 0x06:
-			mRadioChannelSave6.setText(curFreqStr);
-			break;
-		default:
-			break;
+			case 0x01:
+				mRadioChannelSave1.setText(curFreqStr);
+				break;
+			case 0x02:
+				mRadioChannelSave2.setText(curFreqStr);
+				break;
+			case 0x03:
+				mRadioChannelSave3.setText(curFreqStr);
+				break;
+			case 0x04:
+				mRadioChannelSave4.setText(curFreqStr);
+				break;
+			case 0x05:
+				mRadioChannelSave5.setText(curFreqStr);
+				break;
+			case 0x06:
+				mRadioChannelSave6.setText(curFreqStr);
+				break;
+			default:
+				break;
 		}
 	}
 
@@ -1168,8 +1337,8 @@ public class RadioMainActivity extends BaseActivity {
 			i.setClassName("com.android.settings",
 					"com.android.settings.apical.AudioSettings");
 			startActivity(i);
-		}catch (Exception e){
-			Toast.makeText(this,"没有找到设置",Toast.LENGTH_SHORT).show();
+		} catch (Exception e) {
+			Toast.makeText(this, "没有找到设置", Toast.LENGTH_SHORT).show();
 		}
 	}
 
@@ -1200,30 +1369,30 @@ public class RadioMainActivity extends BaseActivity {
 		// 设置保存的频率
 		for (int i = 0; i < num_one_page; i++) {
 			switch (i) {
-			case 0:
-				mRadioChannelSave1.setText(freqValueString[nCurPage
-						* num_one_page]);
-				break;
-			case 1:
-				mRadioChannelSave2.setText(freqValueString[nCurPage
-						* num_one_page + 1]);
-				break;
-			case 2:
-				mRadioChannelSave3.setText(freqValueString[nCurPage
-						* num_one_page + 2]);
-				break;
-			case 3:
-				mRadioChannelSave4.setText(freqValueString[nCurPage
-						* num_one_page + 3]);
-				break;
-			case 4:
-				mRadioChannelSave5.setText(freqValueString[nCurPage
-						* num_one_page + 4]);
-				break;
-			case 5:
-				mRadioChannelSave6.setText(freqValueString[nCurPage
-						* num_one_page + 5]);
-				break;
+				case 0:
+					mRadioChannelSave1.setText(freqValueString[nCurPage
+							* num_one_page]);
+					break;
+				case 1:
+					mRadioChannelSave2.setText(freqValueString[nCurPage
+							* num_one_page + 1]);
+					break;
+				case 2:
+					mRadioChannelSave3.setText(freqValueString[nCurPage
+							* num_one_page + 2]);
+					break;
+				case 3:
+					mRadioChannelSave4.setText(freqValueString[nCurPage
+							* num_one_page + 3]);
+					break;
+				case 4:
+					mRadioChannelSave5.setText(freqValueString[nCurPage
+							* num_one_page + 4]);
+					break;
+				case 5:
+					mRadioChannelSave6.setText(freqValueString[nCurPage
+							* num_one_page + 5]);
+					break;
 			}
 		}
 	}
@@ -1537,108 +1706,108 @@ public class RadioMainActivity extends BaseActivity {
 		bytePtyStatus = data.getByte("PTYStatus");
 
 		switch (bytePtyStatus) {
-		case 0:
-			mPtyStatus.setText("NO PTY");
-			break;
-		case 1:
-			mPtyStatus.setText("NEWS");
-			break;
-		case 2:
-			mPtyStatus.setText("AFFAIRS");
-			break;
-		case 3:
-			mPtyStatus.setText("INFO");
-			break;
-		case 4:
-			mPtyStatus.setText("SPORT");
-			break;
-		case 5:
-			mPtyStatus.setText("EDUCATE");
-			break;
-		case 6:
-			mPtyStatus.setText("DRAMA");
-			break;
-		case 7:
-			mPtyStatus.setText("CULTURE");
-			break;
-		case 8:
-			mPtyStatus.setText("SCIENCE");
-			break;
-		case 9:
-			mPtyStatus.setText("VARIED");
-			break;
-		case 10:
-			mPtyStatus.setText("POP M");
-			break;
-		case 11:
-			mPtyStatus.setText("ROCK M");
-			break;
-		case 12:
-			mPtyStatus.setText("EASY M");
-			break;
-		case 13:
-			mPtyStatus.setText("LIGHT M");
-			break;
-		case 14:
-			mPtyStatus.setText("CLASSICS");
-			break;
-		case 15:
-			mPtyStatus.setText("OTHER M");
-			break;
-		case 16:
-			mPtyStatus.setText("WEATHER");
-			break;
-		case 17:
-			mPtyStatus.setText("FINANCE");
-			break;
-		case 18:
-			mPtyStatus.setText("CHILDREN");
-			break;
-		case 19:
-			mPtyStatus.setText("SOCIAL");
-			break;
-		case 20:
-			mPtyStatus.setText("RELIGION");
-			break;
-		case 21:
-			mPtyStatus.setText("PHONE IN");
-			break;
-		case 22:
-			mPtyStatus.setText("TRAVEL");
-			break;
-		case 23:
-			mPtyStatus.setText("LEISURE");
-			break;
-		case 24:
-			mPtyStatus.setText("JAZZ");
-			break;
-		case 25:
-			mPtyStatus.setText("COUNTRY");
-			break;
-		case 26:
-			mPtyStatus.setText("NATION M");
-			break;
-		case 27:
-			mPtyStatus.setText("OLDIES");
-			break;
-		case 28:
-			mPtyStatus.setText("FOLK M");
-			break;
-		case 29:
-			mPtyStatus.setText("DOCUMENT");
-			break;
-		case 30:
-			mPtyStatus.setText("TEST");
-			break;
-		case 31:
-			mPtyStatus.setText("ALARM!");
-			break;
-		case 32:
-			mPtyStatus.setText("Nothing!");
-			break;
-		default:
-			mPtyStatus.setText(" ");
-			break;
+			case 0:
+				mPtyStatus.setText("NO PTY");
+				break;
+			case 1:
+				mPtyStatus.setText("NEWS");
+				break;
+			case 2:
+				mPtyStatus.setText("AFFAIRS");
+				break;
+			case 3:
+				mPtyStatus.setText("INFO");
+				break;
+			case 4:
+				mPtyStatus.setText("SPORT");
+				break;
+			case 5:
+				mPtyStatus.setText("EDUCATE");
+				break;
+			case 6:
+				mPtyStatus.setText("DRAMA");
+				break;
+			case 7:
+				mPtyStatus.setText("CULTURE");
+				break;
+			case 8:
+				mPtyStatus.setText("SCIENCE");
+				break;
+			case 9:
+				mPtyStatus.setText("VARIED");
+				break;
+			case 10:
+				mPtyStatus.setText("POP M");
+				break;
+			case 11:
+				mPtyStatus.setText("ROCK M");
+				break;
+			case 12:
+				mPtyStatus.setText("EASY M");
+				break;
+			case 13:
+				mPtyStatus.setText("LIGHT M");
+				break;
+			case 14:
+				mPtyStatus.setText("CLASSICS");
+				break;
+			case 15:
+				mPtyStatus.setText("OTHER M");
+				break;
+			case 16:
+				mPtyStatus.setText("WEATHER");
+				break;
+			case 17:
+				mPtyStatus.setText("FINANCE");
+				break;
+			case 18:
+				mPtyStatus.setText("CHILDREN");
+				break;
+			case 19:
+				mPtyStatus.setText("SOCIAL");
+				break;
+			case 20:
+				mPtyStatus.setText("RELIGION");
+				break;
+			case 21:
+				mPtyStatus.setText("PHONE IN");
+				break;
+			case 22:
+				mPtyStatus.setText("TRAVEL");
+				break;
+			case 23:
+				mPtyStatus.setText("LEISURE");
+				break;
+			case 24:
+				mPtyStatus.setText("JAZZ");
+				break;
+			case 25:
+				mPtyStatus.setText("COUNTRY");
+				break;
+			case 26:
+				mPtyStatus.setText("NATION M");
+				break;
+			case 27:
+				mPtyStatus.setText("OLDIES");
+				break;
+			case 28:
+				mPtyStatus.setText("FOLK M");
+				break;
+			case 29:
+				mPtyStatus.setText("DOCUMENT");
+				break;
+			case 30:
+				mPtyStatus.setText("TEST");
+				break;
+			case 31:
+				mPtyStatus.setText("ALARM!");
+				break;
+			case 32:
+				mPtyStatus.setText("Nothing!");
+				break;
+			default:
+				mPtyStatus.setText(" ");
+				break;
 		}
 	}
 
