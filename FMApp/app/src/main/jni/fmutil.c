@@ -1,5 +1,3 @@
-
-
 #include <fcntl.h>
 #include <asm-generic/ioctl.h>
 #include "fflog.h"
@@ -11,9 +9,11 @@
 #define FM_IOCTL_SET_VOL	_IOW('T', 0x45, int)
 #define FM_IOCTL_SEEK	    _IOW('T', 0x46, int)
 
+//typedef void (*callback)(int status, int level, int usn, int wam, int offset, int modulation);
+
 int fd = -1;
 JNIEXPORT void JNICALL
-Java_com_example_fmutil_FMUtil_openDevice(JNIEnv *env, jobject instance, jstring path_)
+Java_com_example_fmutil_FMUtil_openDevice(JNIEnv *env, jclass type, jstring path_)
 {
     const char *path = (*env)->GetStringUTFChars(env, path_, 0);
     if(fd < 0) {
@@ -26,7 +26,7 @@ Java_com_example_fmutil_FMUtil_openDevice(JNIEnv *env, jobject instance, jstring
 }
 
 JNIEXPORT void JNICALL
-Java_com_example_fmutil_FMUtil_closeDevice(JNIEnv *env, jobject instance)
+Java_com_example_fmutil_FMUtil_closeDevice(JNIEnv *env, jclass type)
 {
     BEGIN
     if(fd < 0) {
@@ -39,7 +39,7 @@ Java_com_example_fmutil_FMUtil_closeDevice(JNIEnv *env, jobject instance)
 }
 
 JNIEXPORT void JNICALL
-Java_com_example_fmutil_FMUtil_powerOn(JNIEnv *env, jobject instance, jint arg)
+Java_com_example_fmutil_FMUtil_powerOn(JNIEnv *env, jclass type, jint arg)
 {
     BEGIN
     if(fd < 0) {
@@ -55,7 +55,7 @@ Java_com_example_fmutil_FMUtil_powerOn(JNIEnv *env, jobject instance, jint arg)
 }
 
 JNIEXPORT void JNICALL
-Java_com_example_fmutil_FMUtil_powerDown(JNIEnv *env, jobject instance, jint arg)
+Java_com_example_fmutil_FMUtil_powerDown(JNIEnv *env, jclass type, jint arg)
 {
     BEGIN
     if(fd < 0) {
@@ -70,7 +70,7 @@ Java_com_example_fmutil_FMUtil_powerDown(JNIEnv *env, jobject instance, jint arg
 }
 
 JNIEXPORT void JNICALL
-Java_com_example_fmutil_FMUtil_tune(JNIEnv *env, jobject instance, jint arg)
+Java_com_example_fmutil_FMUtil_tune(JNIEnv *env, jclass type, jint arg)
 {
     BEGIN
     if(fd < 0) {
@@ -85,7 +85,7 @@ Java_com_example_fmutil_FMUtil_tune(JNIEnv *env, jobject instance, jint arg)
 }
 
 JNIEXPORT void JNICALL
-Java_com_example_fmutil_FMUtil_setMute(JNIEnv *env, jobject instance, jint arg)
+Java_com_example_fmutil_FMUtil_setMute(JNIEnv *env, jclass type, jint arg)
 {
 
     BEGIN
@@ -102,7 +102,7 @@ Java_com_example_fmutil_FMUtil_setMute(JNIEnv *env, jobject instance, jint arg)
 }
 
 JNIEXPORT void JNICALL
-Java_com_example_fmutil_FMUtil_setVolume(JNIEnv *env, jobject instance, jint arg)
+Java_com_example_fmutil_FMUtil_setVolume(JNIEnv *env, jclass type, jint arg)
 {
 
     BEGIN
@@ -119,9 +119,8 @@ Java_com_example_fmutil_FMUtil_setVolume(JNIEnv *env, jobject instance, jint arg
 }
 
 JNIEXPORT void JNICALL
-Java_com_example_fmutil_FMUtil_seek(JNIEnv *env, jobject instance, jint arg)
+Java_com_example_fmutil_FMUtil_seek(JNIEnv *env, jclass type, jint arg)
 {
-
     BEGIN
     if(fd < 0) {
         LOGFE("Error!!! fd(%d)", fd);
@@ -132,5 +131,26 @@ Java_com_example_fmutil_FMUtil_seek(JNIEnv *env, jobject instance, jint arg)
         LOGFE("FM_IOCTL_SEEK failed\n");
     }
     END
+}
 
+JNIEXPORT jbyteArray JNICALL
+Java_com_example_fmutil_FMUtil_read(JNIEnv *env, jclass type)
+{
+    BEGIN
+    if(fd < 0) {
+        LOGFE("Error!!! fd(%d)", fd);
+        return NULL;
+    }
+    unsigned char data[10] = {0};
+    int ret = read(fd, data, 10);
+    LOGD("+++++++++++++++++++++++");
+    LOGD("read result length(%d)",ret);
+    for(int i=0; i < ret; i++) {
+        LOGD("read [%d] --> [0x%x]", i, data[i]);
+    }
+    LOGD("-----------------------");
+    jbyteArray result = (*env)->NewByteArray(env, ret);
+    (*env)->SetByteArrayRegion(env, result, 0, ret, (jbyte *)data);
+    END
+    return result;
 }

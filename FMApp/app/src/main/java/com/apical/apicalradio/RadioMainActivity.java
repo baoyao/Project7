@@ -465,6 +465,7 @@ public class RadioMainActivity extends BaseActivity {
 
 	}
 
+	//8950
 	private void setCurrentChannel(int channel){
 		mCurrentChannel = channel;
 		SPUtils.saveConfig(this,"CURRENT_CHANNEL",""+channel);
@@ -673,6 +674,10 @@ public class RadioMainActivity extends BaseActivity {
 				mScanBrower = true;
 				mRadioController
 						.RadioCtrl(RadioController.RADIO_AUTO_SEARCH_SAVE);
+				startActivityForResult(new Intent(RadioMainActivity.this,RadioSearchActivity.class),1001);
+//				int channel=9050;
+//				FMUtil.seek(channel);
+				Toast.makeText(RadioMainActivity.this,"开始搜索频道",Toast.LENGTH_SHORT).show();
 			}
 		});
 
@@ -873,6 +878,7 @@ public class RadioMainActivity extends BaseActivity {
 		}
 	};
 
+	//8950
 	private void setCurrentChannelAtSeekBar(int channelNum){
 		mSeekBar.setProgress(channelNum-(MIN_CHANNEL*100));
 		mChannelNumShowTextView
@@ -1196,12 +1202,35 @@ public class RadioMainActivity extends BaseActivity {
 			if (num1 != 1) {
 				mRadioController.SetRadioMode();
 			}
+
+			int channel=this.getIntent().getIntExtra("setChannel", -1);
+			if(channel!=-1){
+				Log.v("bao","onResume setChannel: "+channel);
+				setCurrentChannel(channel);
+				setCurrentChannelAtSeekBar(channel);
+			}
 		}
 
 		AppRunState.SetHomeBack(false);
 
 		Log.d(TAG, "QLLRadio onResume end time=" + ca.get(Calendar.SECOND)
 				+ ":" + ca.get(Calendar.MILLISECOND));
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		switch (requestCode){
+			case 1001:
+				int channel=data.getIntExtra("setChannel", -1);
+				Log.v("bao","onActivityResult setChannel: "+channel);
+				if(channel!=-1){
+					setCurrentChannel(channel);
+					setCurrentChannelAtSeekBar(channel);
+				}
+				break;
+		}
+
 	}
 
 	// ��FM short�ֽ�תΪ�ַ�Ƶ��

@@ -35,6 +35,7 @@ public class FMUtil {
 
     public static native void seek(int arg);
 
+    public static native byte[] read();
 
     public static void onApplicationCreate(){
         openDevice("/dev/fm");

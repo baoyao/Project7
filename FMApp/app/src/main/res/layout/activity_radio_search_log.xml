@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_radio_search_log"
+    android:layout_width="500dp"
+    android:layout_height="300dp"
+    tools:context="com.apical.apicalradio.RadioSearchActivity"
+    android:gravity="center_horizontal"
+    android:background="@drawable/radio_bg"
+    android:orientation="vertical">
+    <TextView
+        android:id="@+id/status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginTop="10dp"
+        android:background="@android:color/darker_gray"
+        android:layout_marginBottom="10dp"/>
+
+    <ListView
+        android:id="@+id/radio_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+</LinearLayout>
