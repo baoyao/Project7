@@ -1,6 +1,7 @@
 package com.apical.apicalradio;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -50,9 +51,9 @@ public class RadioMainActivity extends BaseActivity {
 	private static final int SEND_RADIO_CTRL = 0x02; // ��������������ID
 	private ApicalHardwareCtrl mApicalHawreCtrl; // apicalӲ�����ƽӿ�
 	// Ĭ�ϵĳ�����Ϣ
-	private static short MIN_CHANNEL = (short) 53.10;//87.50
-	private static short MAX_CHANNEL = (short) 162.90;//108.00
-	private int mCurrentChannel = MIN_CHANNEL*100;
+	private static double MIN_CHANNEL = (double) 53.10;//87.50
+	private static double MAX_CHANNEL = (double) 162.90;//108.00
+	private double mCurrentChannel = MIN_CHANNEL*100;
 	private static final String AM_MIN_CHANNEL = "531"; // AM��СƵ��
 	private static final String AM_MAX_CHANNEL = "1629"; // AM��СƵ��
 	private static final String FM_UNIT_HZ = "FM \nMHz"; // FM��λ
@@ -472,7 +473,7 @@ public class RadioMainActivity extends BaseActivity {
 	}
 
 	public int getCurrentChannel(){
-		return mCurrentChannel;
+		return Integer.parseInt(SPUtils.getConfig(this,"CURRENT_CHANNEL","9050"));
 	}
 
 	/*
@@ -480,7 +481,7 @@ public class RadioMainActivity extends BaseActivity {
 	 */
 	private void InitInterface() {
 		mSeekBar = (SeekBar) findViewById(R.id.seekBarProgress);
-		mSeekBar.setMax((MAX_CHANNEL - MIN_CHANNEL) * 100);
+		mSeekBar.setMax((int)((MAX_CHANNEL - MIN_CHANNEL) * 100));
 		setCurrentChannelAtSeekBar(Integer.parseInt(SPUtils.getConfig(this,"CURRENT_CHANNEL","9050")));
 		mSeekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 			float showFreq = 0.0f;
@@ -495,14 +496,14 @@ public class RadioMainActivity extends BaseActivity {
 				if (onTouchStick) {
 					// FM
 					if ((mRadioBandType <= FM3) && (mRadioBandType >= FM1)) {
-						float showNum = MIN_CHANNEL + progress/10f;
+						float showNum = (float)(MIN_CHANNEL + progress/10f);
 						showFreq = showNum / 100.0f;
 						mChannelNumShowTextView
 								.setBackgroundDrawable(new BitmapDrawable(
 										picNum.getFloatPic(showFreq)));
 						// SetFMFreq(showFreq);
 					} else {//执行这里
-						showNum = MIN_CHANNEL + progress/10f;
+						showNum = (float)(MIN_CHANNEL + progress/10f);
 						mChannelNumShowTextView
 								.setBackgroundDrawable(new BitmapDrawable(
 										picNum.getFloatPic(showNum)));
@@ -624,26 +625,33 @@ public class RadioMainActivity extends BaseActivity {
 		});
 
 		// ������һ��
-		ImageButton preChannelImageButton = (ImageButton) findViewById(R.id.buttonPreChannel);
+		ImageButton preChannelImageButton = (ImageButton) findViewById(R.id.buttonPreChannel);//频道-0.1
 		preChannelImageButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View view) {
 				Log.d(TAG, "preChannelImageButton.onClick(" + view + ")");
 				mRadioController
 						.RadioCtrl(RadioController.RADIO_HANDLE_SEARCH_UP);
+
+				int currentChannel=getCurrentChannel()-10;
+				setCurrentChannel(currentChannel);
+				setCurrentChannelAtSeekBar(currentChannel);
 			}
 		});
 
 		// ������һ��
-		ImageButton nextChannelImageButton = (ImageButton) findViewById(R.id.buttonNextChannel);
+		ImageButton nextChannelImageButton = (ImageButton) findViewById(R.id.buttonNextChannel);//频道+0.1
 		nextChannelImageButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View view) {
 				Log.d(TAG, "nextChannelImageButton.onClick(" + view + ")");
 				mRadioController
 						.RadioCtrl(RadioController.RADIO_HANDLE_SEARCH_DOWN);
+				int currentChannel=getCurrentChannel()+10;
+				setCurrentChannel(currentChannel);
+				setCurrentChannelAtSeekBar(currentChannel);
 			}
 		});
 
-		// 向前搜索
+		// 向后搜索
 		ImageButton preSearchImageButton = (ImageButton) findViewById(R.id.buttonPreSearch);
 		preSearchImageButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View view) {
@@ -651,10 +659,40 @@ public class RadioMainActivity extends BaseActivity {
 				mScanBrower = true;
 				mRadioController
 						.RadioCtrl(RadioController.RADIO_AUTO_SEARCH_UP);
+
+				final int startPosition = getCurrentChannel();
+				final int endPosition = (int)(startPosition-((MAX_CHANNEL*100)-(MIN_CHANNEL*100)));
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
+						for (int i=startPosition;i>=endPosition;i--){
+							int freq=i;
+							if(freq <(MIN_CHANNEL*100)){
+								freq = (int)((MAX_CHANNEL*100)-((MIN_CHANNEL*100)-i));
+							}
+							FMUtil.seek(freq);
+							byte[] result=FMUtil.read();
+							Log.v("bao","PreSearch freq:"+freq+" read : "+ Arrays.toString(result));
+							if(result == null){
+								continue;
+							}
+							if(FMUtil.compareResult(freq,result)!=-1) {
+								mSeachNextChannelHandler.sendEmptyMessage(freq);
+								break;
+							}
+							try {
+								Thread.sleep(2);
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
+						}
+					}
+
+				}).start();
 			}
 		});
 
-		// 向后搜索
+		// 向前搜索
 		ImageButton nextSearchImageButton = (ImageButton) findViewById(R.id.buttonNextSearch);
 		nextSearchImageButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View view) {
@@ -662,6 +700,37 @@ public class RadioMainActivity extends BaseActivity {
 				mScanBrower = true;
 				mRadioController
 						.RadioCtrl(RadioController.RADIO_AUTO_SEARCH_DOWN);
+
+
+				final int startPosition = getCurrentChannel();
+				final int endPosition = (int)(startPosition+((MAX_CHANNEL*100)-(MIN_CHANNEL*100)));
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
+						for (int i=startPosition;i<=endPosition;i++){
+							int freq=i;
+							if(freq>(MAX_CHANNEL*100)){
+								freq=(int)(i-(MAX_CHANNEL*100)+(MIN_CHANNEL*100));
+							}
+							FMUtil.seek(freq);
+							byte[] result=FMUtil.read();
+							Log.v("bao","NextSearch freq:"+freq+" read : "+ Arrays.toString(result));
+							if(result == null){
+								continue;
+							}
+							if(FMUtil.compareResult(freq,result)!=-1) {
+								mSeachNextChannelHandler.sendEmptyMessage(freq);
+								break;
+							}
+							try {
+								Thread.sleep(2);
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
+						}
+					}
+
+				}).start();
 
 			}
 		});
@@ -717,6 +786,14 @@ public class RadioMainActivity extends BaseActivity {
 		});
 
 	}
+
+	Handler mSeachNextChannelHandler = new Handler(){
+		@Override
+		public void handleMessage(Message msg) {
+			setCurrentChannel(msg.what);
+			setCurrentChannelAtSeekBar(msg.what);
+		}
+	};
 
 	/*
 	 * qulingling 20131024 PTY选择框
@@ -880,7 +957,7 @@ public class RadioMainActivity extends BaseActivity {
 
 	//8950
 	private void setCurrentChannelAtSeekBar(int channelNum){
-		mSeekBar.setProgress(channelNum-(MIN_CHANNEL*100));
+		mSeekBar.setProgress(channelNum-(int)(MIN_CHANNEL*100));
 		mChannelNumShowTextView
 				.setBackgroundDrawable(new BitmapDrawable(
 						picNum.getFloatPic(channelNum/100f)));
@@ -1600,9 +1677,9 @@ public class RadioMainActivity extends BaseActivity {
 			int bottom = mSeekBar.getPaddingBottom();
 			mSeekBar.setBackgroundResource(R.drawable.fm_channel_bg);
 			mSeekBar.setPadding(left, top, right, bottom);
-			mSeekBar.setMax(MAX_CHANNEL - MIN_CHANNEL);// FM
+			mSeekBar.setMax((int)(MAX_CHANNEL - MIN_CHANNEL));// FM
 			mRaidoUnit.setBackgroundResource(R.drawable.mhz);
-			mSeekBar.setProgress(FMFreq2Int(mCurFreq) - MIN_CHANNEL);
+			mSeekBar.setProgress((int)(FMFreq2Int(mCurFreq) - MIN_CHANNEL));
 		} else {
 			mCurFreqString = String.valueOf(mCurFreq);
 
@@ -1626,9 +1703,9 @@ public class RadioMainActivity extends BaseActivity {
 			int bottom = mSeekBar.getPaddingBottom();
 			mSeekBar.setBackgroundResource(R.drawable.am_channel_bg);
 			mSeekBar.setPadding(left, top, right, bottom);
-			mSeekBar.setMax(MAX_CHANNEL - MIN_CHANNEL);// AM
+			mSeekBar.setMax((int)(MAX_CHANNEL - MIN_CHANNEL));// AM
 			mRaidoUnit.setBackgroundResource(R.drawable.khz);
-			mSeekBar.setProgress(mCurFreq - MIN_CHANNEL);
+			mSeekBar.setProgress((int)(mCurFreq - MIN_CHANNEL));
 		}
 
 		SetSaveFreqText(mCurFreqIndex, mCurFreqString);
@@ -1864,18 +1941,18 @@ public class RadioMainActivity extends BaseActivity {
 						"*************************qulingling 2********MIN_CHANNEL="
 								+ MIN_CHANNEL + " MAX_CHANNEL=" + MAX_CHANNEL);
 
-				mSeekBar.setMax(MAX_CHANNEL - MIN_CHANNEL);// FM
+				mSeekBar.setMax((int)(MAX_CHANNEL - MIN_CHANNEL));// FM
 				mRaidoUnit.setBackgroundResource(R.drawable.mhz);
-				mSeekBar.setProgress(FMFreq2Int(mCurFreq) - MIN_CHANNEL);
+				mSeekBar.setProgress((int)(FMFreq2Int(mCurFreq) - MIN_CHANNEL));
 			} else {
 				String minString = shortMin + "";
 				String maxString = shortMax + "";
 				MIN_CHANNEL = shortMin;
 				MAX_CHANNEL = shortMax;
 
-				mSeekBar.setMax(MAX_CHANNEL - MIN_CHANNEL);// AM
+				mSeekBar.setMax((int)(MAX_CHANNEL - MIN_CHANNEL));// AM
 				mRaidoUnit.setBackgroundResource(R.drawable.khz);
-				mSeekBar.setProgress(mCurFreq - MIN_CHANNEL);
+				mSeekBar.setProgress((int)(mCurFreq - MIN_CHANNEL));
 			}
 
 		}

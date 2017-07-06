@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.util.Log;
 
 import com.example.fmapp.R;
 
@@ -16,11 +17,11 @@ public class DrawPicNum {
 
 	public DrawPicNum(Context context) {
 		this.context = context;
-		mBack = BitmapFactory.decodeResource(context.getResources(),
-				R.drawable.number_bg);
-		alterBitemp = Bitmap.createBitmap(mBack.getWidth(), mBack.getHeight(),
-				mBack.getConfig());
-	}
+	mBack = BitmapFactory.decodeResource(context.getResources(),
+	R.drawable.number_bg);
+	alterBitemp = Bitmap.createBitmap(mBack.getWidth(), mBack.getHeight(),
+			mBack.getConfig());//getWidth: 395 getHeight: 123
+}
 
 	public Bitmap getStringPic(String str) {
 

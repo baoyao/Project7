@@ -70,7 +70,7 @@ public class RadioSearchActivity extends BaseActivity {
                     if(result == null){
                         continue;
                     }
-                    //level usn wam offset bandwidth
+                    //INDEX for [level, usn, wam, offset, bandwidth]
                     final int LEVEL=0;
                     final int USN=1;
                     final int WAM=2;
@@ -80,11 +80,12 @@ public class RadioSearchActivity extends BaseActivity {
                     final int FMSM_TH = -1;
                     final int IFC = 1;
 
-                    if((result[BANDWIDTH]>0x07d5)&&((result[LEVEL]>=FMSM_TH)&&(result[USN]<0x70)&&(result[WAM]<0x70)&&IFC<0x4a)){//一般电台
+
+                    if(FMUtil.compareResult(freq,result)==1){//一般电台
                         addToList(freq,result[LEVEL],"一般电台");
-                    }else if((freq==99100)&&(result[BANDWIDTH]>0x0500)&&(result[LEVEL]>=FMSM_TH)&&(result[USN]<0x9a)&&(result[WAM]<0x9a)&&(IFC<0x6a)){//99.1特殊电台
+                    }else if(FMUtil.compareResult(freq,result)==2){//99.1特殊电台
                         addToList(freq,result[LEVEL],"99.1特殊电台");
-                    }else if((result[LEVEL]>=FMSM_TH)&&(result[USN]<0x80)&&(result[WAM]<0x80)&&(IFC<0x6a)&&freq==94200){//94.2特殊电台
+                    }else if(FMUtil.compareResult(freq,result)==3){//94.2特殊电台
                         addToList(freq,result[LEVEL],"94.2特殊电台");
                     }
                 }
