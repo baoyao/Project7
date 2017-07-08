@@ -53,20 +53,22 @@ public class RadioSearchActivity extends BaseActivity {
             }
         });
 
-        for (int i=0;i<=5;i++){
-            addToList(8950+(i*100),5,"调试数据");
-        }
+//        for (int i=0;i<=5;i++){
+//            addToList(8950+(i*100),5,"调试数据");
+//        }
 
         Log.v("bao","-----------------------------------\n\n\n");
 
         new Thread(new Runnable() {
             @Override
             public void run() {
-                for (int i=MIN_CHANNEL;i<=MAX_CHANNEL;i++){
-                    int freq=i;
+                int[] freqs=FMUtil.ALL_FREQS;
+//                for (int i=MIN_CHANNEL;i<=MAX_CHANNEL;i++){
+                for (int i=0;i<freqs.length;i++){
+                    int freq=freqs[i];
                     FMUtil.seek(freq);
                     byte[] result=FMUtil.read();
-                    Log.v("bao","FMUtil.read : "+ Arrays.toString(result));
+                    Log.v("bao","FMUtil.read : "+ Arrays.toString(result)+" freq: "+freq);
                     if(result == null){
                         continue;
                     }
@@ -81,11 +83,12 @@ public class RadioSearchActivity extends BaseActivity {
                     final int IFC = 1;
 
 
-                    if(FMUtil.compareResult(freq,result)==1){//一般电台
+                    int comp=FMUtil.compareResult(freq,result);
+                    if(comp==1){//一般电台
                         addToList(freq,result[LEVEL],"一般电台");
-                    }else if(FMUtil.compareResult(freq,result)==2){//99.1特殊电台
+                    }else if(comp==2){//99.1特殊电台
                         addToList(freq,result[LEVEL],"99.1特殊电台");
-                    }else if(FMUtil.compareResult(freq,result)==3){//94.2特殊电台
+                    }else if(comp==3){//94.2特殊电台
                         addToList(freq,result[LEVEL],"94.2特殊电台");
                     }
                 }
@@ -107,14 +110,16 @@ public class RadioSearchActivity extends BaseActivity {
         info.tag = tag;
         mList.add(info);
         mHandler.sendEmptyMessage(1);
-        mRadioStatus.setText("搜索列表");
+        FMUtil.setRadioList(mList);
     }
 
 
     private Handler mHandler=new Handler(){
         @Override
         public void handleMessage(Message msg) {
+            mRadioStatus.setText("搜索到"+mList.size()+"个台");
             mMyAdapter.notifyDataSetChanged();
+            FMUtil.tune(mList.get(0).frequency);
         }
     };
 
@@ -157,12 +162,5 @@ public class RadioSearchActivity extends BaseActivity {
         class ViewHolder{
             TextView radioName,radioFrequency,radioLevel,radioTag;
         }
-    }
-
-    private class RadioInfo{
-        private String name;
-        private int frequency;
-        private int level;
-        private String tag;
     }
 }

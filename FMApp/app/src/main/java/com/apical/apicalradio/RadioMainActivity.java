@@ -470,9 +470,11 @@ public class RadioMainActivity extends BaseActivity {
 	private void setCurrentChannel(int channel){
 		mCurrentChannel = channel;
 		SPUtils.saveConfig(this,"CURRENT_CHANNEL",""+channel);
+		Log.v("tt","setCurrentChannel "+channel+"  "+SPUtils.getConfig(this,"CURRENT_CHANNEL","9050"));
 	}
 
 	public int getCurrentChannel(){
+		Log.v("tt","getCurrentChannel "+SPUtils.getConfig(this,"CURRENT_CHANNEL","9050"));
 		return Integer.parseInt(SPUtils.getConfig(this,"CURRENT_CHANNEL","9050"));
 	}
 
@@ -632,9 +634,17 @@ public class RadioMainActivity extends BaseActivity {
 				mRadioController
 						.RadioCtrl(RadioController.RADIO_HANDLE_SEARCH_UP);
 
-				int currentChannel=getCurrentChannel()-10;
+//				int currentChannel=getCurrentChannel()-10;
+				RadioInfo info=FMUtil.getPrepRadio();
+				if(info == null){
+					startActivityForResult(new Intent(RadioMainActivity.this,RadioSearchActivity.class),1001);
+					return;
+				}
+				int currentChannel=info.frequency;
 				setCurrentChannel(currentChannel);
 				setCurrentChannelAtSeekBar(currentChannel);
+				FMUtil.tune(currentChannel);
+//				Toast.makeText(RadioMainActivity.this,"切换频道为："+(currentChannel/100f),Toast.LENGTH_SHORT).show();
 			}
 		});
 
@@ -645,9 +655,17 @@ public class RadioMainActivity extends BaseActivity {
 				Log.d(TAG, "nextChannelImageButton.onClick(" + view + ")");
 				mRadioController
 						.RadioCtrl(RadioController.RADIO_HANDLE_SEARCH_DOWN);
-				int currentChannel=getCurrentChannel()+10;
+//				int currentChannel=getCurrentChannel()+10;
+				RadioInfo info=FMUtil.getNextRadio();
+				if(info == null){
+					startActivityForResult(new Intent(RadioMainActivity.this,RadioSearchActivity.class),1001);
+					return;
+				}
+				int currentChannel=info.frequency;
 				setCurrentChannel(currentChannel);
 				setCurrentChannelAtSeekBar(currentChannel);
+				FMUtil.tune(currentChannel);
+//				Toast.makeText(RadioMainActivity.this,"切换频道为："+(currentChannel/100f),Toast.LENGTH_SHORT).show();
 			}
 		});
 
@@ -660,24 +678,41 @@ public class RadioMainActivity extends BaseActivity {
 				mRadioController
 						.RadioCtrl(RadioController.RADIO_AUTO_SEARCH_UP);
 
-				final int startPosition = getCurrentChannel();
-				final int endPosition = (int)(startPosition-((MAX_CHANNEL*100)-(MIN_CHANNEL*100)));
+//				Toast.makeText(RadioMainActivity.this,"向后搜索频道... "+getCurrentChannel(),Toast.LENGTH_SHORT).show();
+				final int currentChannel=getCurrentChannel();
 				new Thread(new Runnable() {
 					@Override
 					public void run() {
-						for (int i=startPosition;i>=endPosition;i--){
-							int freq=i;
-							if(freq <(MIN_CHANNEL*100)){
-								freq = (int)((MAX_CHANNEL*100)-((MIN_CHANNEL*100)-i));
+						int searchIndex=0;
+						for (int i=0;i<FMUtil.ALL_FREQS.length;i++){
+							if(FMUtil.ALL_FREQS[i]>currentChannel){
+								searchIndex = i-2;
+								break;
 							}
+						}
+						for (int i=0;i<FMUtil.ALL_FREQS.length;i++){
+							if(searchIndex<0){
+								searchIndex=FMUtil.ALL_FREQS.length-1;
+							}
+							int freq=FMUtil.ALL_FREQS[searchIndex];
+							searchIndex--;
+
 							FMUtil.seek(freq);
 							byte[] result=FMUtil.read();
-							Log.v("bao","PreSearch freq:"+freq+" read : "+ Arrays.toString(result));
+							Log.v("bao","PreSearch freq:"+freq+" searchIndex: "+searchIndex+" read : "+ Arrays.toString(result));
 							if(result == null){
 								continue;
 							}
+
+							Message mSeachNextChannelMessage =mSeachNextChannelHandler.obtainMessage();
+							mSeachNextChannelMessage.what=0;
+							mSeachNextChannelMessage.arg1=freq;
+							mSeachNextChannelHandler.sendMessage(mSeachNextChannelMessage);
 							if(FMUtil.compareResult(freq,result)!=-1) {
-								mSeachNextChannelHandler.sendEmptyMessage(freq);
+								Message findChannelMsg =mSeachNextChannelHandler.obtainMessage();
+								findChannelMsg.what=1;
+								findChannelMsg.arg1=freq;
+								mSeachNextChannelHandler.sendMessage(findChannelMsg);
 								break;
 							}
 							try {
@@ -701,25 +736,40 @@ public class RadioMainActivity extends BaseActivity {
 				mRadioController
 						.RadioCtrl(RadioController.RADIO_AUTO_SEARCH_DOWN);
 
-
-				final int startPosition = getCurrentChannel();
-				final int endPosition = (int)(startPosition+((MAX_CHANNEL*100)-(MIN_CHANNEL*100)));
+//				Toast.makeText(RadioMainActivity.this,"向前搜索频道... "+getCurrentChannel(),Toast.LENGTH_SHORT).show();
+				final int currentChannel=getCurrentChannel();
 				new Thread(new Runnable() {
 					@Override
 					public void run() {
-						for (int i=startPosition;i<=endPosition;i++){
-							int freq=i;
-							if(freq>(MAX_CHANNEL*100)){
-								freq=(int)(i-(MAX_CHANNEL*100)+(MIN_CHANNEL*100));
+						int searchIndex=0;
+						for (int i=0;i<FMUtil.ALL_FREQS.length;i++){
+							if(FMUtil.ALL_FREQS[i]>currentChannel){
+								searchIndex = i;
+								break;
 							}
+						}
+						for (int i=0;i<FMUtil.ALL_FREQS.length;i++){
+							if(searchIndex>=FMUtil.ALL_FREQS.length){
+								searchIndex=0;
+							}
+							int freq=FMUtil.ALL_FREQS[searchIndex];
+							searchIndex++;
 							FMUtil.seek(freq);
 							byte[] result=FMUtil.read();
-							Log.v("bao","NextSearch freq:"+freq+" read : "+ Arrays.toString(result));
+							Log.v("bao","NextSearch freq:"+freq+" searchIndex: "+searchIndex+" read : "+ Arrays.toString(result));
 							if(result == null){
 								continue;
 							}
+
+							Message mSeachNextChannelMessage =mSeachNextChannelHandler.obtainMessage();
+							mSeachNextChannelMessage.what=0;
+							mSeachNextChannelMessage.arg1=freq;
+							mSeachNextChannelHandler.sendMessage(mSeachNextChannelMessage);
 							if(FMUtil.compareResult(freq,result)!=-1) {
-								mSeachNextChannelHandler.sendEmptyMessage(freq);
+								Message findChannelMsg =mSeachNextChannelHandler.obtainMessage();
+								findChannelMsg.what=1;
+								findChannelMsg.arg1=freq;
+								mSeachNextChannelHandler.sendMessage(findChannelMsg);
 								break;
 							}
 							try {
@@ -790,8 +840,12 @@ public class RadioMainActivity extends BaseActivity {
 	Handler mSeachNextChannelHandler = new Handler(){
 		@Override
 		public void handleMessage(Message msg) {
-			setCurrentChannel(msg.what);
-			setCurrentChannelAtSeekBar(msg.what);
+			if(msg.what==1){
+				setCurrentChannel(msg.arg1);
+				FMUtil.tune(msg.arg1);
+//				Toast.makeText(RadioMainActivity.this,"搜索完毕，切换到 "+(msg.arg1/100f),Toast.LENGTH_SHORT).show();
+			}
+			setCurrentChannelAtSeekBar(msg.arg1);
 		}
 	};
 
@@ -879,18 +933,43 @@ public class RadioMainActivity extends BaseActivity {
 		mRadioChannelSave6.setOnLongClickListener(mOnSaveChannelLongClick);
 
 		if(isFirstRun()){
+			/*
+			90.50
+			90.90
+			91.10
+			93.00
+			94.50
+			102.80
+			103.00
+			104.30
+			104.90
+			105.70
+			107.10*/
+//			mRadioChannelSave1.setText("103.00");
+//			mRadioChannelSave2.setText("104.30");
+//			mRadioChannelSave3.setText("104.90");
+//			mRadioChannelSave4.setText("105.70");
+//			mRadioChannelSave5.setText("107.10");
+//			mRadioChannelSave6.setText("102.8");
+//			SPUtils.saveConfig(this,"SAVE_CHANNEL1","103.00");
+//			SPUtils.saveConfig(this,"SAVE_CHANNEL2","104.30");
+//			SPUtils.saveConfig(this,"SAVE_CHANNEL3","104.90");
+//			SPUtils.saveConfig(this,"SAVE_CHANNEL4","105.70");
+//			SPUtils.saveConfig(this,"SAVE_CHANNEL5","107.10");
+//			SPUtils.saveConfig(this,"SAVE_CHANNEL6","102.8");
+
 			mRadioChannelSave1.setText("90.5");
-			mRadioChannelSave2.setText("104.3");
-			mRadioChannelSave3.setText("0");
-			mRadioChannelSave4.setText("0");
-			mRadioChannelSave5.setText("0");
-			mRadioChannelSave6.setText("0");
+			mRadioChannelSave2.setText("90.9");
+			mRadioChannelSave3.setText("91.1");
+			mRadioChannelSave4.setText("93.0");
+			mRadioChannelSave5.setText("94.5");
+			mRadioChannelSave6.setText("102.8");
 			SPUtils.saveConfig(this,"SAVE_CHANNEL1","90.5");
-			SPUtils.saveConfig(this,"SAVE_CHANNEL2","104.3");
-			SPUtils.saveConfig(this,"SAVE_CHANNEL3","0");
-			SPUtils.saveConfig(this,"SAVE_CHANNEL4","0");
-			SPUtils.saveConfig(this,"SAVE_CHANNEL5","0");
-			SPUtils.saveConfig(this,"SAVE_CHANNEL6","0");
+			SPUtils.saveConfig(this,"SAVE_CHANNEL2","90.9");
+			SPUtils.saveConfig(this,"SAVE_CHANNEL3","91.1");
+			SPUtils.saveConfig(this,"SAVE_CHANNEL4","93.0");
+			SPUtils.saveConfig(this,"SAVE_CHANNEL5","94.5");
+			SPUtils.saveConfig(this,"SAVE_CHANNEL6","102.8");
 		}else{
 			mRadioChannelSave1.setText(SPUtils.getConfig(this,"SAVE_CHANNEL1","0"));
 			mRadioChannelSave2.setText(SPUtils.getConfig(this,"SAVE_CHANNEL2","0"));
@@ -944,7 +1023,7 @@ public class RadioMainActivity extends BaseActivity {
 	private OnClickListener mOnSaveChannelClick=new OnClickListener() {
 		@Override
 		public void onClick(View view) {
-			int channelNum = (int)(Float.parseFloat(((TextView)view).getText().toString())*100);
+			final int channelNum = (int)(Float.parseFloat(((TextView)view).getText().toString())*100);
 			if(channelNum==0){
 				return;
 			}
@@ -952,6 +1031,30 @@ public class RadioMainActivity extends BaseActivity {
 			setCurrentChannel(channelNum);
 			setCurrentChannelAtSeekBar(channelNum);
 			Toast.makeText(RadioMainActivity.this,"播放电台"+((TextView)view).getText(),Toast.LENGTH_SHORT).show();
+
+			FMUtil.seek(channelNum);
+			Log.v("tt","freq: "+channelNum);
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					int freq=channelNum;
+						FMUtil.seek(freq);
+						byte[] result=FMUtil.read();
+						Log.v("bao","mOnSaveChannelClick freq:"+freq+" read : "+ Arrays.toString(result));
+						if(result == null){
+							return;
+						}
+						if(FMUtil.compareResult(freq,result)!=-1) {
+//							mSeachNextChannelHandler.sendEmptyMessage(freq);
+						}
+						try {
+							Thread.sleep(2);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+				}
+
+			}).start();
 		}
 	};
 
@@ -1297,11 +1400,15 @@ public class RadioMainActivity extends BaseActivity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
+		if(data == null){
+			return;
+		}
 		switch (requestCode){
 			case 1001:
 				int channel=data.getIntExtra("setChannel", -1);
 				Log.v("bao","onActivityResult setChannel: "+channel);
 				if(channel!=-1){
+					FMUtil.tune(channel);
 					setCurrentChannel(channel);
 					setCurrentChannelAtSeekBar(channel);
 				}
